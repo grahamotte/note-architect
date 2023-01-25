@@ -266,7 +266,29 @@ const App = () => {
               );
             })}
           </div>
-          <div className="col-4 pt-3 pb-3 ">asdf</div>
+          <div className="col-4 pt-3 pb-3 ">
+            {Object.values(ass["subjective"]["affective state"]).includes(
+              true
+            ) && (
+              <span>
+                The client's affective and emotional state was reported to be{" "}
+                {Object.keys(ass["subjective"]["affective state"])
+                  .filter((x) => ass["subjective"]["affective state"][x])
+                  .join(", ")}
+                .
+              </span>
+            )}
+
+            {Object.values(ass["subjective"]["relational"]).includes(true) && (
+              <span>
+                The client's affective and emotional state was reported to be{" "}
+                {Object.keys(ass["subjective"]["relational"])
+                  .filter((x) => ass["subjective"]["relational"][x])
+                  .join(", ")}
+                .
+              </span>
+            )}
+          </div>
         </div>
       </div>
     </>
