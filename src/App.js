@@ -55,16 +55,124 @@ const App = () => {
         "exploration of relationship with mother": false,
         "exploration of relationships with sibling(s)": false,
       },
-      trauma: {},
-      identity: {},
+      trauma: {
+        "relational difficulties": false,
+        "recent relational conflict": false,
+        "coping with relational frustrations": false,
+        "struggles with social anxiety": false,
+        "coping with anger and envy in interpersonal relationships": false,
+        "coping with feelings of rejection in interpersonal relationships": false,
+        "difficulties with boundaries in interpersonal relationships": false,
+        "securing appropriate boundaries": false,
+        "crisis situation in family": false,
+        "conflict with family members": false,
+        "working through interpersonal/family experiences": false,
+        "interpersonal difficulties with spouse/partner": false,
+        "sexual difficulties and/or concerns": false,
+        "exploration of family life": false,
+        "exploration of relationship with father": false,
+        "exploration of relationship with mother": false,
+        "exploration of relationships with sibling(s)": false,
+      },
+      identity: {
+        "relational difficulties": false,
+        "recent relational conflict": false,
+        "coping with relational frustrations": false,
+        "struggles with social anxiety": false,
+        "coping with anger and envy in interpersonal relationships": false,
+        "coping with feelings of rejection in interpersonal relationships": false,
+        "difficulties with boundaries in interpersonal relationships": false,
+        "securing appropriate boundaries": false,
+        "crisis situation in family": false,
+        "conflict with family members": false,
+        "working through interpersonal/family experiences": false,
+        "interpersonal difficulties with spouse/partner": false,
+        "sexual difficulties and/or concerns": false,
+        "exploration of family life": false,
+        "exploration of relationship with father": false,
+        "exploration of relationship with mother": false,
+        "exploration of relationships with sibling(s)": false,
+      },
     },
     objective: {
-      affective: {},
-      mental: {},
+      affective: {
+        "relational difficulties": false,
+        "recent relational conflict": false,
+        "coping with relational frustrations": false,
+        "struggles with social anxiety": false,
+        "coping with anger and envy in interpersonal relationships": false,
+        "coping with feelings of rejection in interpersonal relationships": false,
+        "difficulties with boundaries in interpersonal relationships": false,
+        "securing appropriate boundaries": false,
+        "crisis situation in family": false,
+        "conflict with family members": false,
+        "working through interpersonal/family experiences": false,
+        "interpersonal difficulties with spouse/partner": false,
+        "sexual difficulties and/or concerns": false,
+        "exploration of family life": false,
+        "exploration of relationship with father": false,
+        "exploration of relationship with mother": false,
+        "exploration of relationships with sibling(s)": false,
+      },
+      mental: {
+        "relational difficulties": false,
+        "recent relational conflict": false,
+        "coping with relational frustrations": false,
+        "struggles with social anxiety": false,
+        "coping with anger and envy in interpersonal relationships": false,
+        "coping with feelings of rejection in interpersonal relationships": false,
+        "difficulties with boundaries in interpersonal relationships": false,
+        "securing appropriate boundaries": false,
+        "crisis situation in family": false,
+        "conflict with family members": false,
+        "working through interpersonal/family experiences": false,
+        "interpersonal difficulties with spouse/partner": false,
+        "sexual difficulties and/or concerns": false,
+        "exploration of family life": false,
+        "exploration of relationship with father": false,
+        "exploration of relationship with mother": false,
+        "exploration of relationships with sibling(s)": false,
+      },
     },
     assessment: {
-      global: {},
-      "level of functioning": {},
+      global: {
+        "relational difficulties": false,
+        "recent relational conflict": false,
+        "coping with relational frustrations": false,
+        "struggles with social anxiety": false,
+        "coping with anger and envy in interpersonal relationships": false,
+        "coping with feelings of rejection in interpersonal relationships": false,
+        "difficulties with boundaries in interpersonal relationships": false,
+        "securing appropriate boundaries": false,
+        "crisis situation in family": false,
+        "conflict with family members": false,
+        "working through interpersonal/family experiences": false,
+        "interpersonal difficulties with spouse/partner": false,
+        "sexual difficulties and/or concerns": false,
+        "exploration of family life": false,
+        "exploration of relationship with father": false,
+        "exploration of relationship with mother": false,
+        "exploration of relationships with sibling(s)": false,
+      },
+      "level of functioning": {
+        "relational difficulties": false,
+        "recent relational conflict": false,
+        "coping with relational frustrations": false,
+        "struggles with social anxiety": false,
+        "coping with anger and envy in interpersonal relationships": false,
+        "coping with feelings of rejection in interpersonal relationships": false,
+        "difficulties with boundaries in interpersonal relationships": false,
+        "securing appropriate boundaries": false,
+        "crisis situation in family": false,
+        "conflict with family members": false,
+        "working through interpersonal/family experiences": false,
+        "interpersonal difficulties with spouse/partner": false,
+        "sexual difficulties and/or concerns": false,
+        "exploration of family life": false,
+        "exploration of relationship with father": false,
+        "exploration of relationship with mother": false,
+        "exploration of relationships with sibling(s)": false,
+      },
     },
   });
   const toggle = (sec, sub, key) => {
@@ -95,13 +203,13 @@ const App = () => {
       <div className="container-fluid">
         <div className="row">
           <div className="col-8 pt-3 pb-3 border-end border-1">
-            <div className="mb-1">
+            <div className="mb-2">
               {Object.keys(ass).map((x) => {
                 return (
                   <button
                     key={x}
                     type="button"
-                    className={`btn me-1 ${
+                    className={`btn me-1 mb-1 ${
                       x === section ? "btn-dark" : "btn-outline-dark"
                     }`}
                     onClick={() => {
@@ -114,13 +222,13 @@ const App = () => {
                 );
               })}
             </div>
-            <div className="mb-3">
+            <div className="mb-2">
               {Object.keys(ass[section]).map((x) => {
                 return (
                   <button
                     key={`${section}${x}`}
                     type="button"
-                    className={`btn me-1 btn-sm ${
+                    className={`btn me-1 mb-1 btn-sm ${
                       x === subSection ? "btn-dark" : "btn-outline-dark"
                     }`}
                     onClick={() => setSubSection(x)}
