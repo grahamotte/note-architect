@@ -196,7 +196,7 @@ const App = () => {
       <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
         <div className="container-fluid">
           <span className="navbar-brand" href="#">
-            Note Architect
+            <i className="fa-solid fa-pen-nib me-2 ms-2" /> Note Architect
           </span>
         </div>
       </nav>
