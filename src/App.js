@@ -1,5 +1,5 @@
 import "./App.css";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { merge } from "lodash";
 
 const App = () => {
@@ -357,6 +357,32 @@ const App = () => {
     },
   });
 
+  const [windowSize, setWindowSize] = useState({
+    height: window.innerHeight,
+    width: window.innerWidth,
+  });
+  const isMobile = windowSize.width <= 768;
+  const [preview, setPreview] = useState(false);
+  const showPreview = !isMobile || preview;
+  const showOptions = !isMobile ? true : !preview;
+  useEffect(() => {
+    window.addEventListener("resize", () => {
+      setWindowSize({
+        height: window.innerHeight,
+        width: window.innerWidth,
+      });
+    });
+
+    return () => {
+      window.removeEventListener("resize", () => {
+        setWindowSize({
+          height: window.innerHeight,
+          width: window.innerWidth,
+        });
+      });
+    };
+  }, []);
+
   const prefixJoinStr = (prefix, items) => {
     if (items.length === 0) {
       return undefined;
@@ -414,84 +440,99 @@ const App = () => {
           <span className="navbar-brand" href="#">
             <i className="fa-solid fa-pen-nib me-2 ms-2" /> Note Architect
           </span>
+          {isMobile && (
+            <span>
+              <button
+                type="button"
+                className="btn bg-white"
+                onClick={() => setPreview(!preview)}
+              >
+                {preview ? "Edit" : "View"}
+              </button>
+            </span>
+          )}
         </div>
       </nav>
       <div className="container-fluid">
         <div className="row">
-          <div className="col-8 pt-3 pb-3 border-end border-1">
-            <div className="mb-2">
-              {Object.keys(ass).map((x) => {
-                return (
-                  <button
-                    key={x}
-                    type="button"
-                    className={`btn me-1 mb-1 ${
-                      x === section ? "btn-dark" : "btn-outline-dark"
-                    }`}
-                    onClick={() => {
-                      setSection(x);
-                      setSubSection(Object.keys(ass[x])[0]);
-                    }}
-                  >
-                    {x} <Badge sec={x} />
-                  </button>
-                );
-              })}
-            </div>
-            <div className="mb-2">
-              {Object.keys(ass[section]).map((x) => {
-                return (
-                  <button
-                    key={`${section}${x}`}
-                    type="button"
-                    className={`btn me-1 mb-1 btn-sm ${
-                      x === subSection ? "btn-dark" : "btn-outline-dark"
-                    }`}
-                    onClick={() => setSubSection(x)}
-                  >
-                    {x} <Badge sec={section} sub={x} />
-                  </button>
-                );
-              })}
-            </div>
-            {Object.keys(ass[section][subSection]).map((x) => {
-              const checked = ass[section][subSection][x];
+          {showOptions && (
+            <div className="col pt-3 pb-3 border-end border-1">
+              <div className="mb-2">
+                {Object.keys(ass).map((x) => {
+                  return (
+                    <button
+                      key={x}
+                      type="button"
+                      className={`btn me-1 mb-1 ${
+                        x === section ? "btn-dark" : "btn-outline-dark"
+                      }`}
+                      onClick={() => {
+                        setSection(x);
+                        setSubSection(Object.keys(ass[x])[0]);
+                      }}
+                    >
+                      {x} <Badge sec={x} />
+                    </button>
+                  );
+                })}
+              </div>
+              <div className="mb-2">
+                {Object.keys(ass[section]).map((x) => {
+                  return (
+                    <button
+                      key={`${section}${x}`}
+                      type="button"
+                      className={`btn me-1 mb-1 btn-sm ${
+                        x === subSection ? "btn-dark" : "btn-outline-dark"
+                      }`}
+                      onClick={() => setSubSection(x)}
+                    >
+                      {x} <Badge sec={section} sub={x} />
+                    </button>
+                  );
+                })}
+              </div>
+              {Object.keys(ass[section][subSection]).map((x) => {
+                const checked = ass[section][subSection][x];
 
-              return (
-                <div
-                  className="d-grid gap-2 mb-1"
-                  key={`${section}:${subSection}:${x}`}
-                >
-                  <button
-                    type="button"
-                    className={`btn btn-sm text-start ${
-                      checked ? "btn-dark" : "btn-outline-dark"
-                    }`}
-                    onClick={() => toggle(section, subSection, x)}
+                return (
+                  <div
+                    className="d-grid gap-2 mb-1"
+                    key={`${section}:${subSection}:${x}`}
                   >
-                    <i
-                      className={
-                        checked
-                          ? "fa-solid fa-circle-check"
-                          : "fa-regular fa-circle"
-                      }
-                    />{" "}
-                    {x}
-                  </button>
-                </div>
-              );
-            })}
-          </div>
-          <div className="col-4 pt-3 pb-3 ">
-            {prefixJoinStr(
-              "The client and I met in order to discuss",
-              keys("Themes")
-            )}
-            {prefixJoinStr(
-              "Symptoms and presenting issues include",
-              keys("Symptoms")
-            )}
-          </div>
+                    <button
+                      type="button"
+                      className={`btn btn-sm text-start ${
+                        checked ? "btn-dark" : "btn-outline-dark"
+                      }`}
+                      onClick={() => toggle(section, subSection, x)}
+                    >
+                      <i
+                        className={
+                          checked
+                            ? "fa-solid fa-circle-check"
+                            : "fa-regular fa-circle"
+                        }
+                      />{" "}
+                      {x}
+                    </button>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+          {showPreview && (
+            <div className={`col-${isMobile ? 12 : 4} pt-3 pb-3`}>
+              {prefixJoinStr(
+                "The client and I met in order to discuss",
+                keys("Themes")
+              )}
+              {prefixJoinStr(
+                "Symptoms and presenting issues include",
+                keys("Symptoms")
+              )}
+            </div>
+          )}
         </div>
       </div>
     </>
