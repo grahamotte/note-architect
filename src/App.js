@@ -3,6 +3,49 @@ import React, { useState, useEffect } from "react";
 import { merge } from "lodash";
 
 const STD = {
+  Heading: {
+    Verification: {
+      "Cx confirmed name and location (at home in CA).": false,
+      "Cx confirmed name and location (at work in CA).": false,
+    },
+    "Risk Assessment": {
+      "Clinician observed cx & cx denies SI/HI/SIB.": false,
+    },
+  },
+  "Reported Affective": {
+    All: {
+      "generally positive": false,
+      "generally content": false,
+      "calm and reflective": false,
+      improved: false,
+      "mainly unhappy": false,
+      sad: false,
+      dysphoric: false,
+      "rather distressed": false,
+      "mildly depressed": false,
+      "moderately depressed": false,
+      "quite depressed": false,
+      "marked by hopelessness": false,
+      withdrawn: false,
+      detached: false,
+      flat: false,
+      nervous: false,
+      "mildly anxious": false,
+      "moderately anxious": false,
+      "quite anxious": false,
+      panicky: false,
+      agitated: false,
+      "over-stimulated": false,
+      excited: false,
+      irritable: false,
+      angry: false,
+      enraged: false,
+      regressed: false,
+      uncontained: false,
+      labile: false,
+      tired: false,
+    },
+  },
   Themes: {
     Relational: {
       "relational difficulties": false,
@@ -810,42 +853,63 @@ const App = () => {
               })}
             </div>
           )}
+          {console.log(keys("Assessment", "Global Assessment"))}
           {showPreview && (
             <div className={`col-${isMobile ? 12 : 4} pt-3 pb-3`}>
-              {[
-                ...prefixStrs(
-                  "The client and I met in order to discuss",
-                  keys("Themes")
-                ),
-                ...prefixStrs(
-                  "Symptoms and presenting issues include",
-                  keys("Symptoms")
-                ),
-                ...prefixStrs(
-                  "The client's affective and emotional state appeared",
-                  keys("Objective", "Affective State")
-                ),
-                ...prefixStrs(
-                  "The client's mental state included",
-                  keys("Objective", "Mental State")
-                ),
-                ...keys("Assessment", "Global Assessment"),
-                ...keys("Assessment", "Level of Functioning"),
-                ...keys("Assessment", "Significant Developments"),
-                ...prefixStrs(
-                  "The client",
-                  keys("Assessment", "Treatment Motivation")
-                ),
-                ...keys("Assessment", "Outstanding Issues"),
-                ...prefixStrs(
-                  "The main therapeutic interventions consisted of",
-                  keys("Interventions")
-                ),
-                ...prefixStrs(
-                  "The ongoing treatment plan includes",
-                  keys("Ongoing Treatment")
-                ),
-              ].join(" ")}
+              {keys("Heading", "Verification").length > 0 && (
+                <p>
+                  <span className="fw-bold">Verification:</span>{" "}
+                  {keys("Heading", "Verification").join(", ")}
+                </p>
+              )}
+
+              {keys("Heading", "Risk Assessment").length > 0 && (
+                <p>
+                  <span className="fw-bold">Risk Assessment:</span>{" "}
+                  {keys("Heading", "Risk Assessment").join(", ")}
+                </p>
+              )}
+
+              <p>
+                {[
+                  ...prefixStrs(
+                    "The client's affective and emotional state was reported to be",
+                    keys("Reported Affective")
+                  ),
+                  ...prefixStrs(
+                    "The client and I met in order to discuss",
+                    keys("Themes")
+                  ),
+                  ...prefixStrs(
+                    "Symptoms and presenting issues include",
+                    keys("Symptoms")
+                  ),
+                  ...prefixStrs(
+                    "The client's affective and emotional state appeared",
+                    keys("Objective", "Affective State")
+                  ),
+                  ...prefixStrs(
+                    "The client's mental state included",
+                    keys("Objective", "Mental State")
+                  ),
+                  ...keys("Assessment", "Global Assessment"),
+                  ...keys("Assessment", "Level of Functioning"),
+                  ...keys("Assessment", "Significant Developments"),
+                  ...prefixStrs(
+                    "The client",
+                    keys("Assessment", "Treatment Motivation")
+                  ),
+                  ...keys("Assessment", "Outstanding Issues"),
+                  ...prefixStrs(
+                    "The main therapeutic interventions consisted of",
+                    keys("Interventions")
+                  ),
+                  ...prefixStrs(
+                    "The ongoing treatment plan includes",
+                    keys("Ongoing Treatment")
+                  ),
+                ].join(" ")}
+              </p>
             </div>
           )}
         </div>
