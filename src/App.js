@@ -12,6 +12,12 @@ const STD = {
       "Clinician observed cx & cx denies SI/HI/SIB.": false,
     },
   },
+  "New Clients": {
+    All: {
+      "Cx attended initial session. Therapist informed cx of practice policies, and mandated reporter status.": false,
+      "Developments are being made in the therapeutic alliance.": false,
+    },
+  },
   "Reported Affective": {
     All: {
       "generally positive": false,
@@ -199,36 +205,6 @@ const STD = {
     },
   },
   Symptoms: {
-    Affective: {
-      "sadness and depressed mood": false,
-      "persistent dysphoria and sadness": false,
-      "feelings of exhaustion and fatigue": false,
-      "feeling bereft and sorrowful": false,
-      "feeling guilty and worthless": false,
-      "feeling anxious and tense": false,
-      "feeling stressed and worried": false,
-      "feelings of agitation": false,
-      "feelings of anxiety and panic": false,
-      "feelings of irritability": false,
-      "anger and episodes of rage": false,
-      "persistent feelings of anger": false,
-      "feeling restless and speedy": false,
-      "feelings of manic excitement": false,
-      "a hypomanic state": false,
-      "mood swings and labile affect": false,
-      "difficulties with impulse control and containment of affects": false,
-      "feelings of indifference and apathy": false,
-      "flat affect and emotional detachment": false,
-      "feelings of emptiness": false,
-      "feelings of loneliness and isolation": false,
-      "feelings of insignificance and alienation": false,
-    },
-    "Grief and Mourning": {
-      "mourning the loss of a loved one": false,
-      "a mourning reaction": false,
-      "unresolved mourning and grief": false,
-      "prolonged mourning and grief": false,
-    },
     Relational: {
       "relational difficulties": false,
       "recent relational conflict": false,
@@ -252,27 +228,18 @@ const STD = {
       "difficulties with trust in interpersonal relationships": false,
       "the tendency to push others away in response to anxiety and need": false,
     },
-    Sexuality: {
-      "sexual difficulties and concerns": false,
-      "concerns regarding sexual identity": false,
-      "concerns regarding sexual desire": false,
-      "concerns regarding sexual performance": false,
-      "concerns regarding sexual preferences": false,
+    Trauma: {
+      "recently experienced severe life stress": false,
+      "recent traumatic experiences and their impact": false,
+      "the impact of being the victim of a crime": false,
+      "the impact of childhood traumas and neglect": false,
+      "the impact of multiple traumatic events and cumulative trauma": false,
+      "distress regarding experienced sexual abuse and its impact": false,
+      "distress regarding emotional neglect experienced during childhood/adolescence": false,
+      "the emotional and psychological impact of transgenerational traumas": false,
+      "the impact of vicarious traumatic experiences": false,
     },
-    "Work and/or School": {
-      "work life and occupational concerns": false,
-      "difficulties with adjustment to a new work situation": false,
-      "the impact of a loss of employment": false,
-      "distress regarding financial issues": false,
-      "coping with stress at school": false,
-      "difficulties with adjustment to university life and studies": false,
-      "anxieties about returning to work": false,
-      "anxieties about returning to school": false,
-      "transitioning back to work life": false,
-      "exhaustion and burn out in work activities": false,
-      "concerns and anxieties regarding retirement": false,
-    },
-    "Self and Identity": {
+    Identity: {
       "low self-esteem and poor confidence": false,
       "feelings of insecurity": false,
       "struggling with self-care and self-preservation": false,
@@ -303,24 +270,63 @@ const STD = {
       "difficulties turning to others for care and support": false,
       "anxiety and concerns regarding gender identity": false,
     },
-    Trauma: {
-      "recently experienced severe life stress": false,
-      "recent traumatic experiences and their impact": false,
-      "the impact of being the victim of a crime": false,
-      "the impact of childhood traumas and neglect": false,
-      "the impact of multiple traumatic events and cumulative trauma": false,
-      "distress regarding experienced sexual abuse and its impact": false,
-      "distress regarding emotional neglect experienced during childhood/adolescence": false,
-      "the emotional and psychological impact of transgenerational traumas": false,
-      "the impact of vicarious traumatic experiences": false,
+    "Mourning / Grief": {
+      "mourning the loss of a loved one": false,
+      "a mourning reaction": false,
+      "unresolved mourning and grief": false,
+      "prolonged mourning and grief": false,
     },
-    "Adjustment and Transition": {
+    Adjustment: {
       "difficulties related to transition to adulthood and adult responsibilities": false,
       "strain of mid-life transitions": false,
       "late-life adjustment and coping with age-related changes": false,
       "adjustment to new demands in life situation": false,
     },
-    "Basic Functioning and Coping": {
+    Affective: {
+      "sadness and depressed mood": false,
+      "persistent dysphoria and sadness": false,
+      "feelings of exhaustion and fatigue": false,
+      "feeling bereft and sorrowful": false,
+      "feeling guilty and worthless": false,
+      "feeling anxious and tense": false,
+      "feeling stressed and worried": false,
+      "feelings of agitation": false,
+      "feelings of anxiety and panic": false,
+      "feelings of irritability": false,
+      "anger and episodes of rage": false,
+      "persistent feelings of anger": false,
+      "feeling restless and speedy": false,
+      "feelings of manic excitement": false,
+      "a hypomanic state": false,
+      "mood swings and labile affect": false,
+      "difficulties with impulse control and containment of affects": false,
+      "feelings of indifference and apathy": false,
+      "flat affect and emotional detachment": false,
+      "feelings of emptiness": false,
+      "feelings of loneliness and isolation": false,
+      "feelings of insignificance and alienation": false,
+    },
+    Sexuality: {
+      "sexual difficulties and concerns": false,
+      "concerns regarding sexual identity": false,
+      "concerns regarding sexual desire": false,
+      "concerns regarding sexual performance": false,
+      "concerns regarding sexual preferences": false,
+    },
+    "Work / School": {
+      "work life and occupational concerns": false,
+      "difficulties with adjustment to a new work situation": false,
+      "the impact of a loss of employment": false,
+      "distress regarding financial issues": false,
+      "coping with stress at school": false,
+      "difficulties with adjustment to university life and studies": false,
+      "anxieties about returning to work": false,
+      "anxieties about returning to school": false,
+      "transitioning back to work life": false,
+      "exhaustion and burn out in work activities": false,
+      "concerns and anxieties regarding retirement": false,
+    },
+    "Basic Functioning / Coping": {
       "difficulties with management and coping with daily life": false,
       "difficulties structuring daily life and making plans for the future": false,
       "day to day organizational difficulties": false,
@@ -331,7 +337,7 @@ const STD = {
       "difficulties with self-assertion and effective interpersonal communication": false,
       "inhibitions in creative pursuits and the capacity for play": false,
     },
-    "Self-Harm and Risk Behaviors": {
+    "Self-Harm / Risk Behaviors": {
       "impulses to self-mutilate": false,
       "engaging in self-mutilating behaviors": false,
       "impulses to self-harm": false,
@@ -342,7 +348,7 @@ const STD = {
       "violent fantasies": false,
       "impulses to harm others and being at risk for acting out violent wishes": false,
     },
-    "Eating and Sleeping": {
+    "Eating / Sleeping": {
       "anorectic behavior and related difficulties": false,
       "difficulties with chronic binge eating": false,
       "bulimic behavior and related difficulties": false,
@@ -351,7 +357,7 @@ const STD = {
       "sleep disturbances": false,
       insomnia: false,
     },
-    "Addiction and Substance Abuse": {
+    "Addiction / Substance Abuse": {
       "struggling with drug dependence and abuse": false,
       "struggling with alcohol dependence and abuse": false,
       "addictions and related concerns": false,
@@ -503,7 +509,6 @@ const STD = {
       "The client displays enhanced feelings of appropriate entitlement": false,
       "Continued improvement in maintenance and respect of boundaries is evident": false,
       "The client continues to sustain gains made in reduced self-destructive behavior": false,
-      "Developments are being made in the therapeutic alliance": false,
       "The client continues in process of re-working and alleviation of traumatic pain and stress": false,
       "The client continues to gain greater mastery over traumatic stimuli and fears": false,
       "The client demonstrates greater capacity for thought and reflection": false,
@@ -765,7 +770,7 @@ const App = () => {
           <span className="navbar-brand" href="#">
             <i className="fa-solid fa-pen-nib me-2 ms-2" /> Note Architect
           </span>
-          <div class="btn-toolbar" role="toolbar">
+          <div className="btn-toolbar" role="toolbar">
             <button
               type="button"
               className="btn bg-warning ms-2"
@@ -853,7 +858,6 @@ const App = () => {
               })}
             </div>
           )}
-          {console.log(keys("Assessment", "Global Assessment"))}
           {showPreview && (
             <div className={`col-${isMobile ? 12 : 4} pt-3 pb-3`}>
               {keys("Heading", "Verification").length > 0 && (
@@ -872,6 +876,7 @@ const App = () => {
 
               <p>
                 {[
+                  ...keys("New Clients", "All"),
                   ...prefixStrs(
                     "The client's affective and emotional state was reported to be",
                     keys("Reported Affective")
@@ -908,7 +913,9 @@ const App = () => {
                     "The ongoing treatment plan includes",
                     keys("Ongoing Treatment")
                   ),
-                ].join(" ")}
+                ]
+                  .map((x) => (x[x.length - 1] === "." ? x : `${x}.`))
+                  .join(" ")}
               </p>
             </div>
           )}
