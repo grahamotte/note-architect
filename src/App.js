@@ -2,7 +2,7 @@ import "./App.css";
 import React, { useState, useEffect } from "react";
 import { merge } from "lodash";
 
-const STD = {
+const ASSESSMENT = {
   Heading: {
     Verification: {
       "Cx confirmed name and location (at home in CA).": false,
@@ -326,7 +326,7 @@ const STD = {
       "exhaustion and burn out in work activities": false,
       "concerns and anxieties regarding retirement": false,
     },
-    "Basic Functioning / Coping": {
+    "Daily Life": {
       "difficulties with management and coping with daily life": false,
       "difficulties structuring daily life and making plans for the future": false,
       "day to day organizational difficulties": false,
@@ -683,8 +683,6 @@ const STD = {
 };
 
 const App = () => {
-  const [ass, setAss] = useState(STD);
-
   const [windowSize, setWindowSize] = useState({
     height: window.innerHeight,
     width: window.innerWidth,
@@ -711,6 +709,39 @@ const App = () => {
     };
   }, []);
 
+  const [mode, setMode] = useState("assessment");
+  const defaultSet = () => {
+    if (mode === "assessment") return ASSESSMENT;
+
+    return {};
+  };
+
+  const [data, setData] = useState(defaultSet());
+  const [section, setSection] = useState(Object.keys(data)[0]);
+  const [subSection, setSubSection] = useState(Object.keys(data[section])[0]);
+  const secs = () => Object.keys(data);
+  const subs = (sec) => Object.keys(data[sec]);
+  const allKeys = (sec, sub) => Object.keys(data[sec][sub]);
+  const onKeys = (sec, sub = undefined) => {
+    const set =
+      sub === undefined
+        ? merge({}, ...Object.values(data[sec]))
+        : data[sec][sub];
+    return Object.keys(set).filter((k) => set[k]);
+  };
+  const toggle = (sec, sub, key) => {
+    setData({
+      ...data,
+      [sec]: {
+        ...data[sec],
+        [sub]: {
+          ...data[sec][sub],
+          [key]: !data[sec][sub][key],
+        },
+      },
+    });
+  };
+
   const prefixStrs = (prefix, items) => {
     if (items.length === 0) {
       return [];
@@ -723,30 +754,78 @@ const App = () => {
     }
   };
 
-  const toggle = (sec, sub, key) => {
-    setAss({
-      ...ass,
-      [sec]: {
-        ...ass[sec],
-        [sub]: {
-          ...ass[sec][sub],
-          [key]: !ass[sec][sub][key],
-        },
-      },
-    });
+  const Assessment = () => {
+    return (
+      <>
+        {onKeys("Heading", "Verification").length > 0 && (
+          <p>
+            <span className="fw-bold">Verification:</span>{" "}
+            {onKeys("Heading", "Verification").join(", ")}
+          </p>
+        )}
+
+        {onKeys("Heading", "Risk Assessment").length > 0 && (
+          <p>
+            <span className="fw-bold">Risk Assessment:</span>{" "}
+            {onKeys("Heading", "Risk Assessment").join(", ")}
+          </p>
+        )}
+
+        <p>
+          {[
+            ...onKeys("New Clients", "All"),
+            ...prefixStrs(
+              "The client's affective and emotional state was reported to be",
+              onKeys("Reported Affective")
+            ),
+            ...prefixStrs(
+              "The client and I met in order to discuss",
+              onKeys("Themes")
+            ),
+            ...prefixStrs(
+              "Symptoms and presenting issues include",
+              onKeys("Symptoms")
+            ),
+            ...prefixStrs(
+              "The client's affective and emotional state appeared",
+              onKeys("Objective", "Affective State")
+            ),
+            ...prefixStrs(
+              "The client's mental state included",
+              onKeys("Objective", "Mental State")
+            ),
+            ...onKeys("Assessment", "Global Assessment"),
+            ...onKeys("Assessment", "Level of Functioning"),
+            ...onKeys("Assessment", "Significant Developments"),
+            ...prefixStrs(
+              "The client",
+              onKeys("Assessment", "Treatment Motivation")
+            ),
+            ...onKeys("Assessment", "Outstanding Issues"),
+            ...prefixStrs(
+              "The main therapeutic interventions consisted of",
+              onKeys("Interventions")
+            ),
+            ...prefixStrs(
+              "The ongoing treatment plan includes",
+              onKeys("Ongoing Treatment")
+            ),
+          ]
+            .map((x) => (x[x.length - 1] === "." ? x : `${x}.`))
+            .join(" ")}
+        </p>
+      </>
+    );
   };
 
-  const [section, setSection] = useState(Object.keys(ass)[0]);
-  const [subSection, setSubSection] = useState(Object.keys(ass[section])[0]);
+  const Text = () => {
+    if (mode === "assessment") return <Assessment />;
 
-  const keys = (sec, sub = undefined) => {
-    const set =
-      sub === undefined ? merge({}, ...Object.values(ass[sec])) : ass[sec][sub];
-    return Object.keys(set).filter((k) => set[k]);
+    return <></>;
   };
 
   const Badge = ({ sec, sub }) => {
-    const k = keys(sec, sub);
+    const k = onKeys(sec, sub);
 
     if (k.length === 0) return;
 
@@ -774,7 +853,7 @@ const App = () => {
             <button
               type="button"
               className="btn bg-warning ms-2"
-              onClick={() => setAss(STD)}
+              onClick={() => setData(defaultSet())}
             >
               Clear All
             </button>
@@ -795,7 +874,7 @@ const App = () => {
           {showOptions && (
             <div className="col pt-3 pb-3 border-end border-1">
               <div className="mb-2">
-                {Object.keys(ass).map((x) => {
+                {secs().map((x) => {
                   return (
                     <button
                       key={x}
@@ -805,7 +884,7 @@ const App = () => {
                       }`}
                       onClick={() => {
                         setSection(x);
-                        setSubSection(Object.keys(ass[x])[0]);
+                        setSubSection(Object.keys(data[x])[0]);
                       }}
                     >
                       {x} <Badge sec={x} />
@@ -814,7 +893,7 @@ const App = () => {
                 })}
               </div>
               <div className="mb-2">
-                {Object.keys(ass[section]).map((x) => {
+                {subs(section).map((x) => {
                   return (
                     <button
                       key={`${section}${x}`}
@@ -829,8 +908,8 @@ const App = () => {
                   );
                 })}
               </div>
-              {Object.keys(ass[section][subSection]).map((x) => {
-                const checked = ass[section][subSection][x];
+              {allKeys(section, subSection).map((x) => {
+                const checked = data[section][subSection][x];
 
                 return (
                   <div
@@ -860,63 +939,7 @@ const App = () => {
           )}
           {showPreview && (
             <div className={`col-${isMobile ? 12 : 4} pt-3 pb-3`}>
-              {keys("Heading", "Verification").length > 0 && (
-                <p>
-                  <span className="fw-bold">Verification:</span>{" "}
-                  {keys("Heading", "Verification").join(", ")}
-                </p>
-              )}
-
-              {keys("Heading", "Risk Assessment").length > 0 && (
-                <p>
-                  <span className="fw-bold">Risk Assessment:</span>{" "}
-                  {keys("Heading", "Risk Assessment").join(", ")}
-                </p>
-              )}
-
-              <p>
-                {[
-                  ...keys("New Clients", "All"),
-                  ...prefixStrs(
-                    "The client's affective and emotional state was reported to be",
-                    keys("Reported Affective")
-                  ),
-                  ...prefixStrs(
-                    "The client and I met in order to discuss",
-                    keys("Themes")
-                  ),
-                  ...prefixStrs(
-                    "Symptoms and presenting issues include",
-                    keys("Symptoms")
-                  ),
-                  ...prefixStrs(
-                    "The client's affective and emotional state appeared",
-                    keys("Objective", "Affective State")
-                  ),
-                  ...prefixStrs(
-                    "The client's mental state included",
-                    keys("Objective", "Mental State")
-                  ),
-                  ...keys("Assessment", "Global Assessment"),
-                  ...keys("Assessment", "Level of Functioning"),
-                  ...keys("Assessment", "Significant Developments"),
-                  ...prefixStrs(
-                    "The client",
-                    keys("Assessment", "Treatment Motivation")
-                  ),
-                  ...keys("Assessment", "Outstanding Issues"),
-                  ...prefixStrs(
-                    "The main therapeutic interventions consisted of",
-                    keys("Interventions")
-                  ),
-                  ...prefixStrs(
-                    "The ongoing treatment plan includes",
-                    keys("Ongoing Treatment")
-                  ),
-                ]
-                  .map((x) => (x[x.length - 1] === "." ? x : `${x}.`))
-                  .join(" ")}
-              </p>
+              <Text />
             </div>
           )}
         </div>
