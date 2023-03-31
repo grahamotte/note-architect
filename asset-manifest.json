@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/note-architect/static/css/main.ddf1bdcc.css",
-    "main.js": "/note-architect/static/js/main.7e8d2135.js",
+    "main.css": "/note-architect/static/css/main.cfa396fb.css",
+    "main.js": "/note-architect/static/js/main.2f583abd.js",
     "static/js/787.e707c2c4.chunk.js": "/note-architect/static/js/787.e707c2c4.chunk.js",
     "index.html": "/note-architect/index.html",
-    "main.ddf1bdcc.css.map": "/note-architect/static/css/main.ddf1bdcc.css.map",
-    "main.7e8d2135.js.map": "/note-architect/static/js/main.7e8d2135.js.map",
+    "main.cfa396fb.css.map": "/note-architect/static/css/main.cfa396fb.css.map",
+    "main.2f583abd.js.map": "/note-architect/static/js/main.2f583abd.js.map",
     "787.e707c2c4.chunk.js.map": "/note-architect/static/js/787.e707c2c4.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.ddf1bdcc.css",
-    "static/js/main.7e8d2135.js"
+    "static/css/main.cfa396fb.css",
+    "static/js/main.2f583abd.js"
   ]
 }
