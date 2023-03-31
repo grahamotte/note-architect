@@ -1,6 +1,6 @@
 import "./App.css";
 import React, { useState, useEffect } from "react";
-import { merge } from "lodash";
+import { merge, split, groupBy, toPairs } from "lodash";
 
 const ASSESSMENT = {
   Heading: {
@@ -20,6 +20,7 @@ const ASSESSMENT = {
   },
   "Reported Affective": {
     All: {
+      okay: false,
       "generally positive": false,
       "generally content": false,
       "calm and reflective": false,
@@ -118,6 +119,8 @@ const ASSESSMENT = {
       "exploration of guilt feelings and inhibitions regarding pleasure and success": false,
     },
     Process: {
+      "developing new homework assignments in collaboration with the client": false,
+      "reviewing and exploring homework assignments": false,
       "exploration of life experiences and self-understanding": false,
       "expression and development of 'true self' experiences and enhanced authenticity": false,
       "development of self-care and self-preservation": false,
@@ -560,11 +563,9 @@ const ASSESSMENT = {
       "targeting more effective problem solving and coping skills in daily life": false,
       "an emphasis on addressing problematic core beliefs": false,
       "evaluating and addressing dysfunctional thoughts": false,
-      "reviewing and exploring homework assignments": false,
       "a review of therapeutic work done in previous sessions": false,
       "an evaluation and exploration of target issues and behaviors": false,
       "an exploration of feedback regarding previous sessions": false,
-      "an emphasis on developing new homework assignments in collaboration with the client": false,
       "addressing the impact of current medications and their effects": false,
       "the use of role play to help address interpersonal difficulties": false,
       "the use of imagery to address fears and anxieties": false,
@@ -682,6 +683,63 @@ const ASSESSMENT = {
   },
 };
 
+const TREATMENT = {
+  Diagnosis: {
+    All: {
+      "F43.22 - Adjustment disorder with anxiety": false,
+      "F33.1 - Major depressive disorder, recurrent, moderate": false,
+      "F43.12 - Post-traumatic stress disorder, chronic": false,
+      "F43.20 - Adjustment disorder, unspecified": false,
+      "Z63.0 - Problems in relationship with spouse or partner": false,
+    },
+  },
+  "Presenting Problem": {
+    "Adjustment disorder with anxiety": {
+      "restlessness or feeling keyed up or on edge": false,
+      "being easily fatigued/low energy": false,
+      "difficulty concentrating or mind going blank": false,
+      irritability: false,
+      "muscle tension": false,
+      "sleep disturbance": false,
+      "uncontrollable worry/fear": false,
+    },
+  },
+  Goal: {
+    "Adjustment disorder with anxiety": {
+      "identify anxiety triggers": false,
+      "learn and utilize coping skills to reduce anxiety": false,
+      "learn and utilize coping skills to improve social relationships in the next 12 months": false,
+      "learn and utilize communication skills to improve her social relationships in the next 12 months": false,
+      "explore concerns relating to parenting": false,
+      "process and work through breakup": false,
+      "research information on parenting and pregnancy": false,
+    },
+  },
+  Objective: {
+    "Adjustment disorder with anxiety": {
+      "Identify anxiety triggers: Cx will do this in order to understand what causes their anxiety.": false,
+      "Identify anxiety triggers: Cx will do this in order to reduce cognitive distortions and limiting beliefs.": false,
+      "Learn and utilize coping skills to reduce anxiety: Cx will do this in order to engage in new social activities in the next 12 months.": false,
+      "Learn and utilize coping skills to reduce anxiety: Cx will do this in order to decrease feelings of panic and constriction in their chest.": false,
+      "Learn and utilize coping skills to reduce anxiety: Cx will do this in order to reduce the physical symptoms associated with anxiety.": false,
+      "Learn and utilize coping skills to improve social relationships: Cx will do this in order to identify communication skills to improve social relationships in the next 12 months.": false,
+      "Learn and utilize communication skills to improve her social relationships: Cx will do this in order to effectively address issues that are important to them in the next 12 months. Effectiveness being measured by how heard, understood, and validated they feel.": false,
+      "Explore concerns relating to parenting.": false,
+      "Process and work through breakup: Cx will do this in order to grieve the loss of the relationship.": false,
+      "Identify anxiety triggers.": false,
+      "Learn and utilize coping skills to reduce anxiety.": false,
+      "Research information on parenting and pregnancy: Cx will do this in order to learn about the changes her body will experience and to better understand what parenthood entails": false,
+    },
+  },
+  "Treatment Frequency": {
+    All: {
+      "Every week": false,
+      "Every other week": false,
+      "Once per month": false,
+    },
+  },
+};
+
 const App = () => {
   const [windowSize, setWindowSize] = useState({
     height: window.innerHeight,
@@ -709,19 +767,34 @@ const App = () => {
     };
   }, []);
 
-  const [mode, setMode] = useState("assessment");
-  const defaultSet = () => {
-    if (mode === "assessment") return ASSESSMENT;
+  const [mode, setMode] = useState(
+    localStorage.getItem("mode") || "assessment"
+  );
+  const [data, setData] = useState(undefined);
+  const [section, setSection] = useState(undefined);
+  const [subSection, setSubSection] = useState(undefined);
+  const reset = (m) => {
+    let set = ASSESSMENT;
+    if (m === "assessment") set = ASSESSMENT;
+    if (m === "treatment") set = TREATMENT;
 
-    return {};
+    localStorage.setItem("mode", m);
+    setMode(m);
+    setData(set);
+    setSection(Object.keys(set)[0]);
+    setSubSection(Object.keys(set[Object.keys(set)[0]])[0]);
+    setPreview(false);
   };
 
-  const [data, setData] = useState(defaultSet());
-  const [section, setSection] = useState(Object.keys(data)[0]);
-  const [subSection, setSubSection] = useState(Object.keys(data[section])[0]);
   const secs = () => Object.keys(data);
   const subs = (sec) => Object.keys(data[sec]);
-  const allKeys = (sec, sub) => Object.keys(data[sec][sub]);
+  const allKeys = (sec, sub = undefined) => {
+    const set =
+      sub === undefined
+        ? merge({}, ...Object.values(data[sec]))
+        : data[sec][sub];
+    return Object.keys(set);
+  };
   const onKeys = (sec, sub = undefined) => {
     const set =
       sub === undefined
@@ -754,74 +827,201 @@ const App = () => {
     }
   };
 
+  const toSentence = (strs) => {
+    return [strs]
+      .flat()
+      .map((x) => (x[x.length - 1] === "." ? x : `${x}.`))
+      .join(" ");
+  };
+
   const Assessment = () => {
     return (
       <>
         {onKeys("Heading", "Verification").length > 0 && (
-          <p>
-            <span className="fw-bold">Verification:</span>{" "}
-            {onKeys("Heading", "Verification").join(", ")}
-          </p>
+          <>
+            <b>Verification:</b> {onKeys("Heading", "Verification").join(", ")}
+            <br />
+            <br />
+          </>
         )}
 
         {onKeys("Heading", "Risk Assessment").length > 0 && (
-          <p>
-            <span className="fw-bold">Risk Assessment:</span>{" "}
+          <>
+            <b>Risk Assessment:</b>{" "}
             {onKeys("Heading", "Risk Assessment").join(", ")}
-          </p>
+            <br />
+            <br />
+          </>
         )}
 
-        <p>
-          {[
-            ...onKeys("New Clients", "All"),
-            ...prefixStrs(
-              "The client's affective and emotional state was reported to be",
-              onKeys("Reported Affective")
-            ),
-            ...prefixStrs(
-              "The client and I met in order to discuss",
-              onKeys("Themes")
-            ),
-            ...prefixStrs(
-              "Symptoms and presenting issues include",
-              onKeys("Symptoms")
-            ),
-            ...prefixStrs(
-              "The client's affective and emotional state appeared",
-              onKeys("Objective", "Affective State")
-            ),
-            ...prefixStrs(
-              "The client's mental state included",
-              onKeys("Objective", "Mental State")
-            ),
-            ...onKeys("Assessment", "Global Assessment"),
-            ...onKeys("Assessment", "Level of Functioning"),
-            ...onKeys("Assessment", "Significant Developments"),
-            ...prefixStrs(
-              "The client",
-              onKeys("Assessment", "Treatment Motivation")
-            ),
-            ...onKeys("Assessment", "Outstanding Issues"),
-            ...prefixStrs(
-              "The main therapeutic interventions consisted of",
-              onKeys("Interventions")
-            ),
-            ...prefixStrs(
-              "The ongoing treatment plan includes",
-              onKeys("Ongoing Treatment")
-            ),
-          ]
-            .map((x) => (x[x.length - 1] === "." ? x : `${x}.`))
-            .join(" ")}
-        </p>
+        {toSentence([
+          ...onKeys("New Clients", "All"),
+          ...prefixStrs(
+            "The client's affective and emotional state was reported to be",
+            onKeys("Reported Affective")
+          ),
+          ...prefixStrs(
+            "The client and I met in order to discuss",
+            onKeys("Themes")
+          ),
+          ...prefixStrs(
+            "Symptoms and presenting issues include",
+            onKeys("Symptoms")
+          ),
+          ...prefixStrs(
+            "The client's affective and emotional state appeared",
+            onKeys("Objective", "Affective State")
+          ),
+          ...prefixStrs(
+            "The client's mental state included",
+            onKeys("Objective", "Mental State")
+          ),
+          ...onKeys("Assessment", "Global Assessment"),
+          ...onKeys("Assessment", "Level of Functioning"),
+          ...onKeys("Assessment", "Significant Developments"),
+          ...prefixStrs(
+            "The client",
+            onKeys("Assessment", "Treatment Motivation")
+          ),
+          ...onKeys("Assessment", "Outstanding Issues"),
+          ...prefixStrs(
+            "The main therapeutic interventions consisted of",
+            onKeys("Interventions")
+          ),
+          ...prefixStrs(
+            "The ongoing treatment plan includes",
+            onKeys("Ongoing Treatment")
+          ),
+        ])}
+      </>
+    );
+  };
+
+  const Treatment = () => {
+    return (
+      <>
+        {onKeys("Diagnosis").length > 0 && (
+          <>
+            <b>Diagnosis:</b> {onKeys("Diagnosis").join(", ")}
+            <br />
+            <br />
+          </>
+        )}
+
+        {onKeys("Presenting Problem").length > 0 && (
+          <>
+            <b>Presenting Problem</b>
+            <br />
+            <br />
+            {onKeys(
+              "Presenting Problem",
+              "Adjustment disorder with anxiety"
+            ) && (
+              <>
+                {toSentence(
+                  prefixStrs(
+                    "Adjustment disorder with anxiety as evidenced by",
+                    onKeys(
+                      "Presenting Problem",
+                      "Adjustment disorder with anxiety"
+                    )
+                  )
+                )}
+                <br />
+                <br />
+              </>
+            )}
+          </>
+        )}
+
+        {onKeys("Goal").length > 0 && (
+          <>
+            <b>Goal</b>
+            <br />
+            <br />
+            <ul>
+              {onKeys("Goal").map((x) => {
+                return <li key={x}>{toSentence(`Cx will ${x}`)}</li>;
+              })}
+            </ul>
+            <br />
+          </>
+        )}
+
+        {onKeys("Objective").length > 0 && (
+          <>
+            <b>Objective</b>
+            <br />
+            <br />
+            <ul>
+              {toPairs(
+                groupBy(
+                  onKeys("Objective").map((x) => split(x, ": ")),
+                  (x) => x[0]
+                )
+              ).map(([group, items]) => {
+                items = items.map(([k, v]) => v).filter((x) => !!x);
+                return (
+                  <li key={group}>
+                    {items.length ? `${group}:` : toSentence(group)}
+                    {items.length > 0 && (
+                      <ul>
+                        {items.map((x) => {
+                          return <li key={x}>{toSentence(x)}</li>;
+                        })}
+                      </ul>
+                    )}
+                  </li>
+                );
+              })}
+            </ul>
+            <br />
+          </>
+        )}
+
+        {onKeys("Treatment Frequency").length > 0 && (
+          <>
+            <b>Treatment Frequency</b>
+            <br />
+            <br />
+            {toSentence(onKeys("Treatment Frequency"))}
+            <br />
+            <br />
+          </>
+        )}
       </>
     );
   };
 
   const Text = () => {
-    if (mode === "assessment") return <Assessment />;
+    var n = <></>;
+    if (mode === "assessment") n = <Assessment />;
+    if (mode === "treatment") n = <Treatment />;
 
-    return <></>;
+    return (
+      <>
+        <div id="text-to-copy" className="mb-2">
+          {n}
+        </div>
+        <div className="text-end">
+          <button
+            className="btn btn-primary"
+            onClick={() => {
+              const node = document.getElementById("text-to-copy");
+              const range = document.createRange();
+              range.selectNode(node);
+              const selection = window.getSelection();
+              selection.removeAllRanges();
+              selection.addRange(range);
+              document.execCommand("copy");
+              selection.removeAllRanges();
+            }}
+          >
+            <i class="fa-solid fa-copy" /> Copy
+          </button>
+        </div>
+      </>
+    );
   };
 
   const Badge = ({ sec, sub }) => {
@@ -842,6 +1042,11 @@ const App = () => {
     );
   };
 
+  if (!data) {
+    reset(mode);
+    return <></>;
+  }
+
   return (
     <>
       <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -850,12 +1055,33 @@ const App = () => {
             <i className="fa-solid fa-pen-nib me-2 ms-2" /> Note Architect
           </span>
           <div className="btn-toolbar" role="toolbar">
+            <div className="btn-group">
+              <button
+                type="button"
+                className={`btn ${
+                  mode === "assessment" ? "btn-light" : "btn-outline-light"
+                }`}
+                onClick={() => reset("assessment")}
+              >
+                Assessment
+              </button>
+              <button
+                type="button"
+                className={`btn ${
+                  mode === "treatment" ? "btn-light" : "btn-outline-light"
+                }`}
+                onClick={() => reset("treatment")}
+              >
+                Treatment
+              </button>
+            </div>
+
             <button
               type="button"
               className="btn bg-warning ms-2"
-              onClick={() => setData(defaultSet())}
+              onClick={() => reset(mode)}
             >
-              Clear All
+              Clear
             </button>
             {isMobile && (
               <button
@@ -869,8 +1095,8 @@ const App = () => {
           </div>
         </div>
       </nav>
-      <div className="container-fluid">
-        <div className="row">
+      <div className="container-fluid h-100">
+        <div className="row h-100">
           {showOptions && (
             <div className="col pt-3 pb-3 border-end border-1">
               <div className="mb-2">
@@ -893,20 +1119,22 @@ const App = () => {
                 })}
               </div>
               <div className="mb-2">
-                {subs(section).map((x) => {
-                  return (
-                    <button
-                      key={`${section}${x}`}
-                      type="button"
-                      className={`btn me-1 mb-1 btn-sm ${
-                        x === subSection ? "btn-dark" : "btn-outline-dark"
-                      }`}
-                      onClick={() => setSubSection(x)}
-                    >
-                      {x} <Badge sec={section} sub={x} />
-                    </button>
-                  );
-                })}
+                {subs(section)
+                  .filter((x) => x !== "All")
+                  .map((x) => {
+                    return (
+                      <button
+                        key={`${section}${x}`}
+                        type="button"
+                        className={`btn me-1 mb-1 btn-sm ${
+                          x === subSection ? "btn-dark" : "btn-outline-dark"
+                        }`}
+                        onClick={() => setSubSection(x)}
+                      >
+                        {x} <Badge sec={section} sub={x} />
+                      </button>
+                    );
+                  })}
               </div>
               {allKeys(section, subSection).map((x) => {
                 const checked = data[section][subSection][x];
